@@ -1,23 +1,31 @@
 import tkinter as tk
 
-window = tk.Tk()
-window.title("ZetaOne")
 
-def calculate():
-    user_input = entry.get()
-    try:
-        result = eval(user_input)
-        label.config(text=f"Result: {result}")
-    except ZeroDivisionError:
-        label.config(text="an error occured")
+class CalculatorApp:
 
-entry = tk.Entry(window)
-entry.pack()
+    def __init__(self, root):
+        self.root = root
+        self.root.title("ZetaOne")
 
-label = tk.Label(window, text="Result:")
-label.pack()
+        self.entry = tk.Entry(root)
+        self.entry.pack()
 
-button = tk.Button(window, text="calculate", command=calculate)
-button.pack()
+        self.label = tk.Label(root, text="Result:")
+        self.label.pack()
 
-window.mainloop()
+        self.button = tk.Button(root, text="calculate", command=self.calculate)
+        self.button.pack()
+
+    def calculate(self):
+        user_input = self.entry.get()
+        try:
+            result = eval(user_input)
+            self.label.config(text=f"Result: {result}")
+        except ZeroDivisionError:
+            self.label.config(text="an error occured")
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = CalculatorApp(root)
+    root.mainloop()
