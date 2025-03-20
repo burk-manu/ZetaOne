@@ -6,6 +6,7 @@ ZetaOne is a simple graphical calculator built using Python. It provides basic a
 ## Features
 - simple mathematic operations
 - User-friendly graphical interface
+- Keyboard Input
 - Error handling for invalid inputs
 
 ## Contributing
