@@ -29,20 +29,35 @@ class CalculatorApp:
             if col_val > 3:
                 col_val = 0
                 row_val += 1
-
+        
+        # binds the key press event to the entry
+        self.root.bind("<Key>", self.key_pressed)
 
     # calculates the result of the user input and actualizes the entry
     def button_pressed(self, char):
-        if char == "=" or char == "\r":
-            try:
-                solution = eval(self.entry.get())
-                self.entry.delete(0, tk.END)
-                self.entry.insert(tk.END, str(solution))
-            except:
-                self.entry.delete(0, tk.END)
-                self.entry.insert(tk.END, "Error")
+        if char == "=":
+            self.calculate_result()
         else:
             self.entry.insert(tk.END, char)
+    
+    def key_pressed(self, event):
+        char = event.char
+        if char == "\r":
+            self.calculate_result()
+        else:
+            self.entry.insert(tk.END, char)
+        
+
+
+    def calculate_result(self) -> None:
+        try:
+            user_input = self.entry.get()
+            solution = eval(user_input)
+            self.entry.delete(0, tk.END)
+            self.entry.insert(tk.END, str(solution))
+        except Exception as e:
+            self.entry.delete(0, tk.END)
+            self.entry.insert(tk.END, "Error")
 
 
 if __name__ == "__main__":
