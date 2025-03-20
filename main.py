@@ -34,20 +34,21 @@ class CalculatorApp:
         self.root.bind("<Key>", self.key_pressed)
 
     # calculates the result of the user input and actualizes the entry
-    def button_pressed(self, char):
+    def button_pressed(self, char) -> None:
         if char == "=":
             self.calculate_result()
         else:
             self.entry.insert(tk.END, char)
     
-    def key_pressed(self, event):
+    def key_pressed(self, event) -> None:
         char = event.char
         if char == "\r":
             self.calculate_result()
-        else:
+        elif char == "\b":
+            self.entry.delete(len(self.entry.get())-1, tk.END)
+        elif char.isdigit() or char in "+-*/.":
             self.entry.insert(tk.END, char)
         
-
 
     def calculate_result(self) -> None:
         try:
