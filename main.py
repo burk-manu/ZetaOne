@@ -7,7 +7,7 @@ class CalculatorApp:
         self.root = root
         self.root.title("ZetaOne")
 
-        self.entry = tk.Entry(root)
+        self.entry = tk.Entry(root, width=16, font=("Arial", 18), borderwidth=1, relief="solid")
         self.entry.grid(row=0, column=0, columnspan=4)
 
         # buttons for the calculator
@@ -23,17 +23,17 @@ class CalculatorApp:
 
         # creating buttons
         for button_icon in buttons:
-            button = tk.Button(root, text=button_icon, width=5, height=2, font=("Arial", 14),
-                               command=lambda char=button_icon: self.button_pressed(char))
+            button = tk.Button(root, text=button_icon, width=5, height=2, font=("Arial", 14), command=lambda char=button_icon: self.button_pressed(char))
             button.grid(row=row_val, column=col_val, padx=5, pady=5)
             col_val += 1
             if col_val > 3:
                 col_val = 0
                 row_val += 1
 
+
     # calculates the result of the user input and actualizes the entry
     def button_pressed(self, char):
-        if char == "=":
+        if char == "=" or char == "\r":
             try:
                 solution = eval(self.entry.get())
                 self.entry.delete(0, tk.END)
