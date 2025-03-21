@@ -56,6 +56,9 @@ class CalculatorApp:
             solution = eval(user_input)
             self.entry.delete(0, tk.END)
             self.entry.insert(tk.END, str(solution))
+        except ZeroDivisionError:
+            self.entry.delete(0, tk.END)
+            self.entry.insert(tk.END, "Division by zero")
         except Exception as e:
             self.entry.delete(0, tk.END)
             self.entry.insert(tk.END, "Error")
