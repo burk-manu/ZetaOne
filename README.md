@@ -17,3 +17,10 @@ As this project is for educational purposes only and is part of a school project
 **Author**: M. Buerki
 
 **License**: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+
+<footer>
+
+&copy; 2025 Manuel Bürki &bull; [Code of Conduct](CODE_OF_CONDUCT.md) &bull; [License](LICENSE.md)
+
+</footer>
