@@ -6,13 +6,12 @@ class CalculatorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("ZetaOne")
-        # self.root.geometry("300x320")
-        # self.root.resizable(False, False)
+        self.root.resizable(False, False)
         self.root.configure(bg="#262626")
 
         self.current_input = ""
 
-        self.entry = tk.Entry(root, width=16, font=("Helvetica Neue", 26, "bold"), borderwidth=1, relief="solid",)
+        self.entry = tk.Entry(root, width=14, font=("Helvetica Neue", 30, "bold"), borderwidth=1, relief="solid",)
         self.entry.configure(bg="#595959", fg="#C04F15")
         self.entry.grid(row=0, column=0, columnspan=4)
 
@@ -29,7 +28,7 @@ class CalculatorApp:
 
         # creating buttons
         for button_icon in buttons:
-            button = tk.Button(root, text=button_icon, width=5, height=2, font=("Arial", 14), command=lambda char=button_icon: self.button_pressed(char))
+            button = tk.Button(root, text=button_icon, width=3, height=1, font=("Helvetica Neue", 24), command=lambda char=button_icon: self.button_pressed(char))
             button.configure(bg="#262626", fg="#C04F15", activebackground="#595959", activeforeground="#C04F15")
             button.grid(row=row_val, column=col_val, padx=5, pady=5)
             col_val += 1
@@ -59,23 +58,30 @@ class CalculatorApp:
                     self.update_entry(char)
 
     def update_entry(self, text) -> None:
+        self.current_input = self.entry.get()
         self.current_input += text
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.current_input)
         
 
-    def calculate_result(self) -> None:
-        try:
-            user_input = self.entry.get()
-            solution = eval(user_input)
-            self.entry.delete(0, tk.END)
-            self.entry.insert(tk.END, str(solution))
-        except ZeroDivisionError:
-            self.entry.delete(0, tk.END)
-            self.entry.insert(tk.END, "Division by zero")
-        except Exception as e:
-            self.entry.delete(0, tk.END)
-            self.entry.insert(tk.END, "Error")
+    def calculate_result(self) -> None:     
+        user_input = self.entry.get()
+        if user_input == "1234":
+            self.activate_easter_egg()
+        else:
+            try:
+                solution = eval(user_input)
+                self.entry.delete(0, tk.END)
+                self.entry.insert(tk.END, str(solution))
+            except ZeroDivisionError:
+                self.entry.delete(0, tk.END)
+                self.entry.insert(tk.END, "Division by zero")
+            except Exception as e:
+                self.entry.delete(0, tk.END)
+                self.entry.insert(tk.END, "Error")
+    
+    def activate_easter_egg(self):
+        print("Easter Egg activated")
 
 
 if __name__ == "__main__":
