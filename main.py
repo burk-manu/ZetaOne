@@ -6,8 +6,14 @@ class CalculatorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("ZetaOne")
+        # self.root.geometry("300x320")
+        # self.root.resizable(False, False)
+        self.root.configure(bg="#262626")
 
-        self.entry = tk.Entry(root, width=16, font=("Arial", 18), borderwidth=1, relief="solid")
+        self.current_input = ""
+
+        self.entry = tk.Entry(root, width=16, font=("Helvetica Neue", 26, "bold"), borderwidth=1, relief="solid",)
+        self.entry.configure(bg="#595959", fg="#C04F15")
         self.entry.grid(row=0, column=0, columnspan=4)
 
         # buttons for the calculator
@@ -24,6 +30,7 @@ class CalculatorApp:
         # creating buttons
         for button_icon in buttons:
             button = tk.Button(root, text=button_icon, width=5, height=2, font=("Arial", 14), command=lambda char=button_icon: self.button_pressed(char))
+            button.configure(bg="#262626", fg="#C04F15", activebackground="#595959", activeforeground="#C04F15")
             button.grid(row=row_val, column=col_val, padx=5, pady=5)
             col_val += 1
             if col_val > 3:
@@ -38,16 +45,23 @@ class CalculatorApp:
         if char == "=":
             self.calculate_result()
         else:
-            self.entry.insert(tk.END, char)
+            self.update_entry(char)
     
     def key_pressed(self, event) -> None:
         char = event.char
         if char == "\r":
             self.calculate_result()
-        elif char == "\b":
-            self.entry.delete(len(self.entry.get())-1, tk.END)
-        elif char.isdigit() or char in "+-*/.":
-            self.entry.insert(tk.END, char)
+        else:
+            if self.entry != self.root.focus_get():
+                if char == "\b":
+                    self.entry.delete(len(self.entry.get())-1, tk.END)
+                elif char.isdigit() or char in "+-*/.":
+                    self.update_entry(char)
+
+    def update_entry(self, text) -> None:
+        self.current_input += text
+        self.entry.delete(0, tk.END)
+        self.entry.insert(tk.END, self.current_input)
         
 
     def calculate_result(self) -> None:
