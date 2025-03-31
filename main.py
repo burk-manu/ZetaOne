@@ -66,7 +66,7 @@ class CalculatorApp:
         else:
             self.update_entry(char)
     
-    def on_paste(self, event=None) -> None:
+    def on_paste(self, event=None) -> None: # handles paste
         try:
             text = self.root.clipboard_get()
             if all(c.isdigit() or c in "+-*/." for c in text):
