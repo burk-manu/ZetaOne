@@ -1,18 +1,17 @@
 import tkinter as tk
-
+from math import pi, e, sin, cos, tan, log, sqrt
 # main application; creating GUI and handles user inputs
 class CalculatorApp:
-
     def __init__(self, root):
         self.root = root
         self.root.title("ZetaOne")
-        self.root.resizable(True, True)
+        self.root.resizable(False, False)
         self.root.configure(bg="#262626")
 
         self.current_input = ""
 
         self.entry = tk.Entry(root, validate="key",
-                              width=14, font=("Helvetica Neue", 30, "bold"), 
+                              width=16, font=("Helvetica Neue", 30, "bold"), 
                               borderwidth=1, relief="solid", justify="right")
         self.entry.configure(bg="#595959", fg="#C04F15")
         self.entry.grid(row=0, column=0, columnspan=4)
@@ -23,27 +22,42 @@ class CalculatorApp:
 
         # buttons for the calculator
         buttons = [
-            "1", "2", "3", "/",
-            "4", "5", "6", "*",
-            "7", "8", "9", "-",
-            "0", ".", "=", "+"
+            ("MC", "MR", "M+", "M-", "C"),
+            ("log", "ln", "|x|", "√", "^"),
+            ("sin", "cos", "tan", "(", ")"),
+            ("7", "8", "9", "/", "π"),
+            ("4", "5", "6", "*", "e"),
+            ("1", "2", "3", "-", "="),
+            ("0", ".", "±", "+", "⌫"),
         ]
 
-        row_val = 1
-        col_val = 0
+        # create buttons and add them to the grid
+        for i, row in enumerate(buttons):
+            for j, text in enumerate(row):
+                button = tk.Button(root, text=text, width=3, height=1, font=("Helvetica Neue", 24),
+                                   command=lambda t=text: self.button_pressed(t))
+                button.configure(bg="#262626", fg="#C04F15", activebackground="#595959",
+                                 activeforeground="#C04F15")
+                button.grid(row=i + 1, column=j, padx=5, pady=5)
 
-        # creating buttons
-        for button_icon in buttons:
-            button = tk.Button(root, text=button_icon, width=3, height=1, font=("Helvetica Neue", 24),
-                               command=lambda char=button_icon: self.button_pressed(char))
-            button.configure(bg="#262626", fg="#C04F15", activebackground="#595959",
-                             activeforeground="#C04F15")
-            button.grid(row=row_val, column=col_val, padx=5, pady=5)
-            col_val += 1
-            if col_val > 3:
-                col_val = 0
-                row_val += 1
+    # function to handle button presses
+    def button_pressed(self, char) -> None:
+        if char == "=":
+            self.calculate_result()
+        elif char == "C":
+            self.clear_entry()
+        elif char == "⌫":
+            self.backspace()
+        elif char == "π":
+            self.update_entry(str(pi))
+        elif char == "e":
+            self.update_entry(str(e))
+        elif char == "^":
+            self.update_entry("**")
+        else:
+            self.update_entry(char)
 
+    # function to handle key presses
     def on_key_press(self, event) -> None:
         char = event.char
         if char == "\r":
@@ -59,13 +73,8 @@ class CalculatorApp:
                     self.update_entry(text)
             except Exception as e:
                 print(f"Error pasting clipboard content: {e}")
-
-    def button_pressed(self, char) -> None:
-        if char == "=":
-            self.calculate_result()
-        else:
-            self.update_entry(char)
     
+    # function to make paste inputs possible
     def on_paste(self, event=None) -> None: # handles paste
         try:
             text = self.root.clipboard_get()
@@ -74,31 +83,53 @@ class CalculatorApp:
         except Exception:
             self.error("Invalid paste")
 
+    # appends the current text to the entry and displays it
     def update_entry(self, text) -> None:
         self.current_input += text
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.current_input)
 
+    # deletes the last character of the current input
     def backspace(self) -> None:
         self.current_input = self.current_input[:-1]
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.current_input)
     
-    def error(self, message) -> None:
+    # clears the current input and resets it to "0"
+    def clear_entry(self) -> None:
+        self.current_input = "0"
         self.entry.delete(0, tk.END)
-        self.entry.insert(tk.END, message)
-        
+        self.entry.insert(tk.END, "0")    
+    
+    # function to handle mathematical operations
+    def calculate_operation(self, operation) -> None:
+        try:
+            result = operation(float(self.current_input))
+            self.output(str(result))
+        except Exception as e:
+            self.error("Error")
+
+    # evaluates the current input and displays the result
     def calculate_result(self) -> None:     
         user_input = self.current_input
         try:
-            solution = eval(user_input)
-            self.entry.delete(0, tk.END)
-            self.entry.insert(tk.END, str(solution))
-            self.current_input = str(solution)
+            result = eval(user_input)
+            self.output(str(result))
         except ZeroDivisionError:
             self.error("Error: Division by zero")
         except Exception as e:
             self.error("Error")
+    
+    # function to print the result or another output
+    def output(self, text) -> None:
+        self.entry.delete(0, tk.END)
+        self.entry.insert(tk.END, text)
+        self.current_input = text
+    
+    # displays an error message without changing the current input
+    def error(self, message) -> None:
+        self.entry.delete(0, tk.END)
+        self.entry.insert(tk.END, message)
 
 if __name__ == "__main__":
     root = tk.Tk()
