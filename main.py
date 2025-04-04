@@ -1,5 +1,6 @@
 import tkinter as tk
-from math import pi, e, sin, cos, tan, log, sqrt
+from modules import parser as pars
+from modules import evaluator
 # main application; creating GUI and handles user inputs
 class CalculatorApp:
     def __init__(self, root):
@@ -14,7 +15,7 @@ class CalculatorApp:
                               width=16, font=("Helvetica Neue", 30, "bold"), 
                               borderwidth=1, relief="solid", justify="right")
         self.entry.configure(bg="#595959", fg="#C04F15")
-        self.entry.grid(row=0, column=0, columnspan=4)
+        self.entry.grid(row=0, column=0, columnspan=5)
 
         self.root.bind("<Key>", self.on_key_press) # Bind keys for input
         self.root.bind("<Control-v>", self.on_paste) # Bind Ctrl+V for paste
@@ -48,12 +49,8 @@ class CalculatorApp:
             self.clear_entry()
         elif char == "⌫":
             self.backspace()
-        elif char == "π":
-            self.update_entry(str(pi))
-        elif char == "e":
-            self.update_entry(str(e))
-        elif char == "^":
-            self.update_entry("**")
+        elif char == "±":
+            self.toggle_sign()
         else:
             self.update_entry(char)
 
@@ -64,8 +61,6 @@ class CalculatorApp:
             self.calculate_result()
         elif char == "\b":
             self.backspace()
-        elif char.isdigit() or char in "+-*/.":
-            self.update_entry(char)
         elif (event.state & 0x4) and (event.keysym.lower() == 'v'):
             try:
                 text = self.root.clipboard_get()
@@ -73,6 +68,15 @@ class CalculatorApp:
                     self.update_entry(text)
             except Exception as e:
                 print(f"Error pasting clipboard content: {e}")
+        else:
+            self.update_entry(char)
+
+    # function to handle toggle sign
+    def toggle_sign(self) -> None:
+        try:
+            self.output(str(-float(self.current_input)))
+        except Exception as e:
+            self.error("Error")
     
     # function to make paste inputs possible
     def on_paste(self, event=None) -> None: # handles paste
@@ -110,13 +114,11 @@ class CalculatorApp:
             self.error("Error")
 
     # evaluates the current input and displays the result
-    def calculate_result(self) -> None:     
-        user_input = self.current_input
+    def calculate_result(self) -> None:
         try:
-            result = eval(user_input)
-            self.output(str(result))
-        except ZeroDivisionError:
-            self.error("Error: Division by zero")
+            user_input = pars.prepare_input_for_eval(self.current_input)
+            result = evaluator.evaluate(user_input)
+            self.output(result)
         except Exception as e:
             self.error("Error")
     
