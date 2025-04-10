@@ -6,19 +6,22 @@ class CalculatorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("ZetaOne")
-        self.root.resizable(False, False)
+        self.root.resizable(False, False)   
         self.root.configure(bg="#262626")
 
-        self.current_input = ""
+        self.current_input = "0"
 
         self.entry = tk.Entry(root, validate="key",
                               width=16, font=("Helvetica Neue", 30, "bold"), 
                               borderwidth=1, relief="solid", justify="right")
         self.entry.configure(bg="#595959", fg="#C04F15")
         self.entry.grid(row=0, column=0, columnspan=5)
+        self.entry.insert(tk.END, "0")
+
 
         self.root.bind("<Key>", self.on_key_press) # Bind keys for input
         self.root.bind("<Control-v>", self.on_paste) # Bind Ctrl+V for paste
+        self.root.bind("<Control-c>", self.on_copy) # Bind Ctrl+C for copy
 
 
         # buttons for the calculator
@@ -32,7 +35,7 @@ class CalculatorApp:
             ("0", ".", "±", "+", "⌫"),
         ]
 
-        # create buttons and add them to the grid
+        # create buttons and add them to the
         for i, row in enumerate(buttons):
             for j, text in enumerate(row):
                 button = tk.Button(root, text=text, width=3, height=1, font=("Helvetica Neue", 24),
@@ -86,10 +89,17 @@ class CalculatorApp:
                 self.update_entry(text)
         except Exception:
             self.error("Invalid paste")
+    
+    def on_copy(self, event=None) -> None: # handles copy
+        try:
+            self.root.clipboard_clear()
+            self.root.clipboard_append(self.current_input)
+        except Exception:
+            self.error("Invalid copy")
 
     # appends the current text to the entry and displays it
     def update_entry(self, text) -> None:
-        self.current_input += text
+        self.current_input = pars.update_entry(self.current_input, text)
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.current_input)
 
