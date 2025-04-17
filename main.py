@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from modules import parser as pars
 from modules import evaluator
 # main application; creating GUI and handles user inputs
@@ -12,7 +13,7 @@ class CalculatorApp:
         self.current_input = "0"
 
         self.entry = tk.Entry(root, validate="key",
-                              width=16, font=("Helvetica Neue", 30, "bold"), 
+                              width=18, font=("Helvetica Neue", 30, "bold"), 
                               borderwidth=1, relief="solid", justify="right")
         self.entry.configure(bg="#595959", fg="#C04F15")
         self.entry.grid(row=0, column=0, columnspan=5)
@@ -35,6 +36,9 @@ class CalculatorApp:
             ("0", ".", "±", "+", "⌫"),
         ]
 
+        # dict for access to the buttons
+        self.buttons = {}
+
         # create buttons and add them to the
         for i, row in enumerate(buttons):
             for j, text in enumerate(row):
@@ -43,6 +47,7 @@ class CalculatorApp:
                 button.configure(bg="#262626", fg="#C04F15", activebackground="#595959",
                                  activeforeground="#C04F15")
                 button.grid(row=i + 1, column=j, padx=5, pady=5)
+                self.buttons[text] = button
 
     # function to handle button presses
     def button_pressed(self, char) -> None:
@@ -98,18 +103,21 @@ class CalculatorApp:
             self.root.clipboard_append(self.current_input)
         except Exception:
             self.error("Invalid copy")
+        self.check_input_for_easter_egg()
 
     # appends the current text to the entry and displays it
     def update_entry(self, text) -> None:
         self.current_input = pars.update_entry(self.current_input, text)
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.current_input)
+        self.check_input_for_easter_egg()
 
     # deletes the last character of the current input
     def backspace(self) -> None:
         self.current_input = self.current_input[:-1]
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.current_input)
+        self.check_input_for_easter_egg()
     
     # clears the current input and resets it to "0"
     def clear_entry(self) -> None:
@@ -144,6 +152,27 @@ class CalculatorApp:
     def error(self, message) -> None:
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, message)
+    
+    # easter egg functions
+    def check_input_for_easter_egg(self) -> None:
+        if self.current_input == "ZetaOne":
+            # add lock symbol (Unicode U+1F512)
+            lock_btn = self.buttons.get("=")
+            if lock_btn:
+                lock_btn.configure(
+                    text="🔓",
+                    command=self.easter_egg
+                )
+        else:
+            # if the input changes again it resets to the "="-Button
+            lock_btn = self.buttons.get("=")
+            if lock_btn:
+                lock_btn.configure(
+                    text="=",
+                    command=lambda: self.button_pressed("="))
+
+    def easter_egg(self) -> None:
+        messagebox.showinfo("🎉", "Easter Egg activated!")
 
 if __name__ == "__main__":
     root = tk.Tk()
