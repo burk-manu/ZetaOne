@@ -6,7 +6,7 @@ class CalculatorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("ZetaOne")
-        self.root.resizable(False, False)   
+        self.root.resizable(False, False)
         self.root.configure(bg="#262626")
 
         self.current_input = "0"
@@ -54,6 +54,8 @@ class CalculatorApp:
             self.backspace()
         elif char == "±":
             self.toggle_sign()
+        elif char in ["sin", "cos", "tan"]:
+            self.update_entry(char + "(")
         else:
             self.update_entry(char)
 
