@@ -24,4 +24,3 @@ def update_entry(current_input, text):
         pending_input = re.sub(pattern, symbol, pending_input)
 
     return pending_input
-        
