@@ -18,5 +18,10 @@ def update_entry(current_input, text):
     if len(pending_input) > 1 and re.match(r"^0(?![.\+\-\*\/])", pending_input):
         pending_input = pending_input[1:]
 
+    replacements = {r"\\pi": 'π', r"\\e": 'e',}
+
+    for pattern, symbol in replacements.items():
+        pending_input = re.sub(pattern, symbol, pending_input)
+
     return pending_input
         
