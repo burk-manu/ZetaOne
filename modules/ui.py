@@ -1,5 +1,13 @@
 import tkinter as tk
 
+
+def init_entry(app) -> None:
+    app.entry = tk.Entry(app.root, font=("Helvetica Neue", 30, "bold"),
+                            borderwidth=1, relief="solid", justify="right")
+    app.entry.configure(bg="#595959", fg="#C04F15")
+    app.entry.grid(row=0, column=0, columnspan=6, sticky="ew", padx=5, pady=5)
+    app.entry.insert(tk.END, "0")
+
 def init_buttons(app):
     buttons = [
     ("MC", "MR", "M+", "M-", "C"),
@@ -36,10 +44,3 @@ def button_pressed(app, char) -> None:
         app.update_entry(char + "(")
     else:
         app.update_entry(char)
-
-def init_entry(app):
-    app.entry = tk.Entry(app.root, font=("Helvetica Neue", 30, "bold"),
-                            borderwidth=1, relief="solid", justify="right")
-    app.entry.configure(bg="#595959", fg="#C04F15")
-    app.entry.grid(row=0, column=0, columnspan=6, sticky="ew", padx=5, pady=5)
-    app.entry.insert(tk.END, "0")

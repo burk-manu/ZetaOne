@@ -1,4 +1,4 @@
-from sympy import sympify, pi, E, sin, cos, tan, log, sqrt
+from sympy import sympify
 
 def evaluate(app) -> str:
     user_input = app.user_input_for_calculation

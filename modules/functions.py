@@ -1,6 +1,9 @@
 import tkinter as tk
 
 def easter_egg(app):
+    lock_btn = app.buttons.get("=")
+    if lock_btn:
+        lock_btn.configure(text="=", command=lambda: ui.button_pressed(app, "="))
     pro_labels = ["P1", "P2", "P3", "P4", "P5", "P6", "P7"]
     if not getattr(app, "extra_shown", False):
         for i, label in enumerate(pro_labels):
@@ -28,4 +31,4 @@ def easter_egg(app):
         app.extra_shown = False
 
 def pro_button(app, label):
-    print(f"{label} was pressed")
+    pass
