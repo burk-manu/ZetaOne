@@ -1,8 +1,9 @@
 import tkinter as tk
-from tkinter import messagebox
 from modules import parser as pars
 from modules import evaluator
-# main application; creating GUI and handles user inputs
+from modules import functions
+from modules import ui
+
 class CalculatorApp:
     def __init__(self, root):
         self.root = root
@@ -11,60 +12,27 @@ class CalculatorApp:
         self.root.configure(bg="#262626")
 
         self.current_input = "0"
-
-        self.entry = tk.Entry(root, validate="key",
-                              width=18, font=("Helvetica Neue", 30, "bold"), 
-                              borderwidth=1, relief="solid", justify="right")
-        self.entry.configure(bg="#595959", fg="#C04F15")
-        self.entry.grid(row=0, column=0, columnspan=5)
-        self.entry.insert(tk.END, "0")
-
-
-        self.root.bind("<Key>", self.on_key_press) # Bind keys for input
-        self.root.bind("<Control-v>", self.on_paste) # Bind Ctrl+V for paste
-        self.root.bind("<Control-c>", self.on_copy) # Bind Ctrl+C for copy
-
-
-        # buttons for the calculator
-        buttons = [
-            ("MC", "MR", "M+", "M-", "C"),
-            ("log", "ln", "|x|", "√", "^"),
-            ("sin", "cos", "tan", "(", ")"),
-            ("7", "8", "9", "/", "π"),
-            ("4", "5", "6", "*", "e"),
-            ("1", "2", "3", "-", "="),
-            ("0", ".", "±", "+", "⌫"),
-        ]
-
-        # dict for access to the buttons
         self.buttons = {}
 
-        # create buttons and add them to the
-        for i, row in enumerate(buttons):
-            for j, text in enumerate(row):
-                button = tk.Button(root, text=text, width=3, height=1, font=("Helvetica Neue", 24),
-                                   command=lambda t=text: self.button_pressed(t))
-                button.configure(bg="#262626", fg="#C04F15", activebackground="#595959",
-                                 activeforeground="#C04F15")
-                button.grid(row=i + 1, column=j, padx=5, pady=5)
-                self.buttons[text] = button
+        self.extra_shown = False
+        self.pro_buttons = {}
 
-    # function to handle button presses
-    def button_pressed(self, char) -> None:
-        if char == "=":
-            self.calculate_result()
-        elif char == "C":
-            self.clear_entry()
-        elif char == "⌫":
-            self.backspace()
-        elif char == "±":
-            self.toggle_sign()
-        elif char in ["sin", "cos", "tan"]:
-            self.update_entry(char + "(")
-        else:
-            self.update_entry(char)
 
-    # function to handle key presses
+        self.entry = tk.Entry(root, font=("Helvetica Neue", 30, "bold"),
+                              borderwidth=1, relief="solid", justify="right")
+        self.entry.configure(bg="#595959", fg="#C04F15")
+        self.entry.grid(row=0, column=0, columnspan=6, sticky="ew", padx=5, pady=5)
+        self.entry.insert(tk.END, "0")
+
+        for c in range(6):
+            self.root.columnconfigure(c, weight=1)
+
+        self.root.bind("<Key>", self.on_key_press)
+        self.root.bind("<Control-v>", self.on_paste)
+        self.root.bind("<Control-c>", self.on_copy)
+
+        ui.init_buttons(self)
+
     def on_key_press(self, event) -> None:
         char = event.char
         if char == "\r":
@@ -81,98 +49,79 @@ class CalculatorApp:
         else:
             self.update_entry(char)
 
-    # function to handle toggle sign
     def toggle_sign(self) -> None:
         try:
             self.output(str(-float(self.current_input)))
-        except Exception as e:
+        except Exception:
             self.error("Error")
-    
-    # function to make paste inputs possible
-    def on_paste(self, event=None) -> None: # handles paste
+
+    def on_paste(self, event=None) -> None:
         try:
             text = self.root.clipboard_get()
             if all(c.isdigit() or c in "+-*/." for c in text):
                 self.update_entry(text)
         except Exception:
             self.error("Invalid paste")
-    
-    def on_copy(self, event=None) -> None: # handles copy
+
+    def on_copy(self, event=None) -> None:
         try:
             self.root.clipboard_clear()
             self.root.clipboard_append(self.current_input)
         except Exception:
             self.error("Invalid copy")
-        self.check_input_for_easter_egg()
+        self.check_input()
 
-    # appends the current text to the entry and displays it
     def update_entry(self, text) -> None:
         self.current_input = pars.update_entry(self.current_input, text)
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.current_input)
-        self.check_input_for_easter_egg()
+        self.check_input()
 
-    # deletes the last character of the current input
     def backspace(self) -> None:
         self.current_input = self.current_input[:-1]
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.current_input)
-        self.check_input_for_easter_egg()
-    
-    # clears the current input and resets it to "0"
+        self.check_input()
+
     def clear_entry(self) -> None:
         self.current_input = "0"
         self.entry.delete(0, tk.END)
-        self.entry.insert(tk.END, "0")    
-    
-    # function to handle mathematical operations
+        self.entry.insert(tk.END, "0")
+        self.check_input()
+
     def calculate_operation(self, operation) -> None:
         try:
             result = operation(float(self.current_input))
             self.output(str(result))
-        except Exception as e:
+        except Exception:
             self.error("Error")
 
-    # evaluates the current input and displays the result
     def calculate_result(self) -> None:
         try:
             user_input = pars.prepare_input_for_eval(self.current_input)
             result = evaluator.evaluate(user_input)
             self.output(result)
-        except Exception as e:
+        except Exception:
             self.error("Error")
-    
-    # function to print the result or another output
+
     def output(self, text) -> None:
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, text)
         self.current_input = text
-    
-    # displays an error message without changing the current input
+
     def error(self, message) -> None:
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, message)
-    
-    # easter egg functions
-    def check_input_for_easter_egg(self) -> None:
-        if self.current_input == "ZetaOne":
-            # add lock symbol (Unicode U+1F512)
-            lock_btn = self.buttons.get("=")
-            if lock_btn:
-                lock_btn.configure(
-                    text="🔓",
-                    command=self.easter_egg
-                )
-        else:
-            # if the input changes again it resets to the "="-Button
-            lock_btn = self.buttons.get("=")
-            if lock_btn:
-                lock_btn.configure(
-                    text="=",
-                    command=lambda: self.button_pressed("="))
 
-    def easter_egg(self) -> None:
-        messagebox.showinfo("🎉", "Easter Egg activated!")
+    def check_input(self) -> None:
+        if self.current_input == "ZetaOne":
+            lock_btn = self.buttons.get("=")
+            if lock_btn:
+                lock_btn.configure(text="🔓", command=lambda: functions.easter_egg(self))
+        else:
+            lock_btn = self.buttons.get("=")
+            if lock_btn:
+                lock_btn.configure(text="=", command=lambda: self.button_pressed("="))
 
 if __name__ == "__main__":
     root = tk.Tk()
