@@ -1,7 +1,6 @@
 import tkinter as tk
 
 def easter_egg(app):
-    app.clear_entry()
     pro_labels = ["P1", "P2", "P3", "P4", "P5", "P6", "P7"]
     if not getattr(app, "extra_shown", False):
         for i, label in enumerate(pro_labels):

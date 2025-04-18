@@ -1,7 +1,7 @@
 import tkinter as tk
 from modules import parser as pars
 from modules import evaluator
-from modules import functions
+
 from modules import ui
 
 class CalculatorApp:
@@ -18,20 +18,13 @@ class CalculatorApp:
         self.pro_buttons = {}
 
 
-        self.entry = tk.Entry(root, font=("Helvetica Neue", 30, "bold"),
-                              borderwidth=1, relief="solid", justify="right")
-        self.entry.configure(bg="#595959", fg="#C04F15")
-        self.entry.grid(row=0, column=0, columnspan=6, sticky="ew", padx=5, pady=5)
-        self.entry.insert(tk.END, "0")
-
-        for c in range(6):
-            self.root.columnconfigure(c, weight=1)
+        ui.init_entry(self)
+        
+        ui.init_buttons(self)
 
         self.root.bind("<Key>", self.on_key_press)
         self.root.bind("<Control-v>", self.on_paste)
         self.root.bind("<Control-c>", self.on_copy)
-
-        ui.init_buttons(self)
 
     def on_key_press(self, event) -> None:
         char = event.char
@@ -69,25 +62,21 @@ class CalculatorApp:
             self.root.clipboard_append(self.current_input)
         except Exception:
             self.error("Invalid copy")
-        self.check_input()
 
     def update_entry(self, text) -> None:
         self.current_input = pars.update_entry(self.current_input, text)
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.current_input)
-        self.check_input()
 
     def backspace(self) -> None:
         self.current_input = self.current_input[:-1]
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.current_input)
-        self.check_input()
 
     def clear_entry(self) -> None:
         self.current_input = "0"
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, "0")
-        self.check_input()
 
     def calculate_operation(self, operation) -> None:
         try:
@@ -98,10 +87,10 @@ class CalculatorApp:
 
     def calculate_result(self) -> None:
         try:
-            user_input = pars.prepare_input_for_eval(self.current_input)
-            result = evaluator.evaluate(user_input)
+            self.user_input_for_calculation = pars.prepare_input_for_eval(self)
+            result = evaluator.evaluate(self)
             self.output(result)
-        except Exception:
+        except ZeroDivisionError:
             self.error("Error")
 
     def output(self, text) -> None:
@@ -112,16 +101,6 @@ class CalculatorApp:
     def error(self, message) -> None:
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, message)
-
-    def check_input(self) -> None:
-        if self.current_input == "ZetaOne":
-            lock_btn = self.buttons.get("=")
-            if lock_btn:
-                lock_btn.configure(text="🔓", command=lambda: functions.easter_egg(self))
-        else:
-            lock_btn = self.buttons.get("=")
-            if lock_btn:
-                lock_btn.configure(text="=", command=lambda: self.button_pressed("="))
 
 if __name__ == "__main__":
     root = tk.Tk()
