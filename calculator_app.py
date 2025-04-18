@@ -2,6 +2,11 @@ import tkinter as tk
 from modules import parser as pars, evaluator, functions, ui
 
 class CalculatorApp:
+    root: tk.Tk
+    entry: tk.Entry
+    buttons: dict[str, tk.Button]
+    current_input: str
+
     def __init__(self, root):
         self.root = root
         self.root.title("ZetaOne")
