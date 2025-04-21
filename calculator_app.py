@@ -10,19 +10,19 @@ if TYPE_CHECKING:
     from calculator_app import CalculatorApp
 
 class CalculatorApp:
-    root: tk.Tk
-    entry: tk.Entry
-    buttons: dict[str, tk.Button]
-    current_input: str
 
     def __init__(self, root):
+        # type notations to prevent error in IDE
+        self.root: tk.Tk
+        self.entry: tk.Entry
+
         self.root = root
         self.root.title("ZetaOne")
         self.root.resizable(False, False)
         self.root.configure(bg="#262626")
 
         self.current_input = "0"
-        self.buttons = {}
+        self.buttons: dict[str, tuple[str, tk.Button]] = {}
 
         self.extra_shown = False
         self.pro_buttons = {}
