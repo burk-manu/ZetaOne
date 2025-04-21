@@ -1,3 +1,8 @@
+# Authir: Manuel Bürki
+# Date: 2025-04-20
+# License: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+#main.py
 import tkinter as tk
 from calculator_app import CalculatorApp
 
