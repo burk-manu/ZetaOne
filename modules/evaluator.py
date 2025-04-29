@@ -1,13 +1,13 @@
 # evaluator.py
 from __future__ import annotations
-from sympy import sympify
-import math
+from sympy import sympify, pi, E, log, deg, Abs
 import re
-from sympy import pi, E
+from sympy.functions import sin, cos, tan
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from calculator_app import CalculatorApp
+
 
 class Evaluator:
     def __init__(self, app: CalculatorApp) -> None:
@@ -15,67 +15,133 @@ class Evaluator:
         self.root = app.root
 
     def prepare_input_for_calculation(self) -> str:
+        """
+        Prepares the user input for evaluation by replacing constants, operators,
+        and converting trigonometric functions from radians to degrees.
+        """
         user_input = self.app.current_input
 
         if user_input == "ZetaOne":
-            self.app.ui.activate_secret_button()
+            self.app.ui.activate_secret_functions()
             return "0"
-        else:
-            # replace constants and special characters with their values
-            replacements = {
-                'π': pi,
-                'e': E,
-                '^': "**",
-            }
-            for symbol, value in replacements.items():
-                user_input = user_input.replace(symbol, str(value))
 
-            # replace trigonometric radians with degrees
-            def replace_trig(match):
-                func = match.group(1)
+        # Replace constants and special characters
+        user_input = self._replace_constants(user_input)
+
+        # Replace trigonometric functions
+        user_input = self._replace_trigonometric_functions(user_input)
+
+        return user_input
+
+    def _replace_constants(self, user_input: str) -> str:
+        """
+        Replaces constants like π and e, and operators like ^ with their equivalents.
+        """
+        replacements = {
+            'π': pi,
+            'e': E,
+            '^': "**",
+        }
+        for symbol, value in replacements.items():
+            user_input = user_input.replace(symbol, str(value))
+        return user_input
+
+    def _replace_trigonometric_functions(self, user_input: str) -> str:
+        """
+        Converts trigonometric functions from radians to degrees using sympy.
+        """
+        def replace_trig(match):
+            func = match.group(1)
+            try:
                 value = float(match.group(2))
-                degrees = math.degrees(value)
+                degrees = deg(value)  # Convert radians to degrees
                 return f"{func}({degrees})"
+            except ValueError:
+                self.app.ui.error("Error")
+                return match.group(0)
 
-            trig_pattern = r'\b(sin|cos|tan)\(\s*([+-]?\d*\.?\d+)\s*\)'
-            user_input = re.sub(trig_pattern, replace_trig, user_input)
-
-            return user_input
+        trig_pattern = r'\b(sin|cos|tan)\(\s*([+-]?\d*\.?\d+)\s*\)'
+        return re.sub(trig_pattern, replace_trig, user_input)
 
     def update_entry(self, text: str) -> str:
+        """
+        Updates the calculator's input entry with the given text.
+        """
         pending_input = self.app.current_input + text
+
+        # Remove leading zero if not followed by a decimal or operator
         if len(pending_input) > 1 and re.match(r"^0(?![.\+\-\*\/])", pending_input):
             pending_input = pending_input[1:]
 
+        # Replace patterns like "\\pi " with their symbols
         replacements = {r"\\pi ": 'π'}
-
         for pattern, symbol in replacements.items():
             pending_input = re.sub(pattern, symbol, pending_input)
 
         return pending_input
-    
-    def calculate_operation(self, operation) -> None:
+
+    def calculate_operation(self, operation: str) -> None:
+        """
+        Performs a specific operation (e.g., sqrt, abs, log) on the user input.
+        """
         try:
-            result = operation(float(self.app.current_input))
-            self.app.ui.output(str(result))
-        except Exception:
+            user_input = self.prepare_input_for_calculation()
+            result = None
+
+            if operation == "sqrt":
+                result = float(user_input) ** 0.5
+            elif operation == "abs":
+                result = Abs(float(user_input))
+            elif operation in ("log", "ln"):
+                result = self.calculate_logarithm(operation, user_input)
+            else:
+                self.app.ui.error("Error")
+                return
+
+            result = self.round_result(result)
+            self.app.ui.output(result)
+        except Exception as e:
             self.app.ui.error("Error")
+
+    def calculate_logarithm(self, operation: str, user_input: str) -> float:
+        """
+        Calculates the logarithm (log or ln) of the user input.
+        """
+        try:
+            if operation == "log":
+                return float(log(sympify(user_input), 10).evalf())  # Base-10 logarithm
+            elif operation == "ln":
+                return float(log(sympify(user_input)).evalf())  # Natural logarithm
+        except ValueError:
+            self.app.ui.error("Error")
+            raise
 
     def calculate_result(self) -> None:
+        """
+        Evaluates the user input and displays the result.
+        """
         try:
-            self.user_input_for_calculation = self.app.evaluator.prepare_input_for_calculation()
-            result = self.app.evaluator.evaluate()
+            user_input = self.prepare_input_for_calculation()
+            result = self.evaluate(user_input)
             self.app.ui.output(result)
-        except ZeroDivisionError:
+        except Exception as e:
             self.app.ui.error("Error")
-    
-    def evaluate(self) -> str:
-        user_input = self.app.evaluator.user_input_for_calculation
-        if user_input != "ZetaOne":
-            result = float(sympify(user_input).evalf())
 
-            if abs(result - round(result)) < 1e-9:
-                return str(int(round(result)))
-            
-            return str(result)
-        return "0"
+    def evaluate(self, user_input: str) -> str:
+        """
+        Evaluates the prepared user input using sympy.
+        """
+        try:
+            result = sympify(user_input).evalf()
+            return self.round_result(result)
+        except Exception:
+            self.app.ui.error("Error")
+            raise
+
+    def round_result(self, result: float) -> str:
+        """
+        Rounds the result to an integer if it's very close to an integer.
+        """
+        if abs(result - round(result)) < 1e-9:
+            return str(int(round(result)))
+        return str(result)

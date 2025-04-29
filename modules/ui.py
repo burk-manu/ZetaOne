@@ -70,6 +70,14 @@ class CalculatorUI:
             self.toggle_sign()
         elif char in ("sin", "cos", "tan"):
             self.app.ui.update_entry(char + "(")
+        elif char == "log":
+            self.app.evaluator.calculate_operation("log")
+        elif char == "ln":
+            self.app.evaluator.calculate_operation("ln")
+        elif char == "√":
+            self.app.evaluator.calculate_operation("sqrt")
+        elif char == "|x|":
+            self.app.evaluator.calculate_operation("abs")
         else:
             self.app.ui.update_entry(char)
     
@@ -104,7 +112,7 @@ class CalculatorUI:
         self.app.entry.delete(0, tk.END)
         self.app.entry.insert(tk.END, message)
 
-    def activate_secret_button(self) -> None:
+    def activate_secret_functions(self) -> None:
         lock_btn = self.app.buttons.get("0705")
         if lock_btn is not None:
             lock_button = lock_btn[1]
