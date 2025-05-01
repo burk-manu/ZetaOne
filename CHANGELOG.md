@@ -5,7 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# [1.2.0] - 2025-03-31
+## [1.3.0] - 2025-05-01
+
+### Added:
+- added more keys and functionalities
+    - log / ln
+    - sin, cos, tan
+    - π, e
+    - ^, ±, √
+    - advanced input otions
+    - seacret functions
+        - theme changing option
+
+### Changed:
+- New Design option
+- Window isn't resizable anymore
+
+### Remove:
+- input protection (all characters are allowed)
+
+
+## [1.2.0] - 2025-03-31
 
 ### Added
 - secure input system to avoid multiple detection of the input (tkinter entry; self.root.bind("\<Key>", function))
