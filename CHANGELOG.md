@@ -14,29 +14,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - π, e
     - ^, ±, √
     - advanced input otions
-    - seacret functions
+    - secret functions
         - theme changing option
 
 ### Changed:
 - New Design option
 - Window isn't resizable anymore
-- programm splited in diffrent modules
+- programme split in different modules
 
-### Remove:
+### Removed:
 - input protection (all characters are allowed)
 
 
 ## [1.2.0] - 2025-03-31
 
-### Added
+### Added:
 - secure input system to avoid multiple detection of the input (tkinter entry; self.root.bind("\<Key>", function))
 
-### Changed
+### Changed:
 - new designed User Interface
     - dark grey background
     - orange font
 
-### Removed
+### Removed:
 - no functions removed
 
 
