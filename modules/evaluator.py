@@ -1,6 +1,6 @@
 # evaluator.py
 from __future__ import annotations
-from sympy import sympify, pi, E, log, deg, Abs
+from sympy import sympify, pi, E, log, Abs, rad
 import re
 from sympy.functions import sin, cos, tan
 from typing import TYPE_CHECKING
@@ -12,7 +12,6 @@ if TYPE_CHECKING:
 class Evaluator:
     def __init__(self, app: CalculatorApp) -> None:
         self.app = app
-        self.root = app.root
 
     def prepare_input_for_calculation(self) -> str:
         """
@@ -54,7 +53,7 @@ class Evaluator:
             func = match.group(1)
             try:
                 value = float(match.group(2))
-                degrees = deg(value)  # Convert radians to degrees
+                degrees = rad(value)  # Convert radians to degrees
                 return f"{func}({degrees})"
             except ValueError:
                 self.app.ui.error("Error")
