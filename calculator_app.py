@@ -30,7 +30,7 @@ class CalculatorApp:
         self.theme = "orange"
 
         # Variables for the advanced options window
-        self.advanced_window: [tk.Toplevel] = None
+        self.advanced_window: tk.Toplevel = None
         self.extra_shown = False
         self.pro_buttons = {}
 

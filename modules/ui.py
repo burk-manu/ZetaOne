@@ -9,11 +9,13 @@ if TYPE_CHECKING:
 
 class CalculatorUI:
     def __init__(self, app: CalculatorApp) -> None:
+        # Initialize the UI components of the calculator
         self.app = app
         self._init_entry()
         self._init_buttons()
 
     def _init_entry(self) -> None:
+        # Initialize and create the entry field
         entry = tk.Entry(
             self.app.root,
             font=("Helvetica Neue", 28, "bold"),
@@ -29,6 +31,7 @@ class CalculatorUI:
             raise AttributeError("self.app.entry is not initialized properly.")
 
     def _init_buttons(self) -> None:
+        # Initialize and create the buttons for the calculator
         layout = [
             ("📋", "📥", "M-", "🔒", "C"),
             ("log", "ln", "|x|", "√", "^"),
@@ -66,8 +69,8 @@ class CalculatorUI:
             self.app.keyboard.on_copy()
         elif char == "📥":
             self.app.keyboard.on_paste()
-        elif char == "M-":
-            pass
+        elif char == "🔒":
+            self.app.ui.error("locked")
         elif char == "C":
             self.app.ui.clear_entry()
         elif char == "⌫":

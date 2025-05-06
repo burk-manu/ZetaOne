@@ -96,9 +96,9 @@ class Evaluator:
             else:
                 self.app.ui.error("Error")
                 return
-
-            result = self.round_result(result)
-            self.app.ui.output(result)
+            if type(result) is float:
+                result = self.round_result(result)
+                self.app.ui.output(result)
         except Exception as e:
             self.app.ui.error("Error")
 
@@ -113,7 +113,7 @@ class Evaluator:
                 return float(log(sympify(user_input)).evalf())  # Natural logarithm
         except ValueError:
             self.app.ui.error("Error")
-            raise
+        raise ValueError("Invalid operation or input for logarithm calculation")
 
     def calculate_result(self) -> None:
         """
