@@ -28,8 +28,7 @@ class Keyboard:
     def on_paste(self, event=None) -> None:
         try:
             text = self.root.clipboard_get()
-            if all(c.isdigit() or c in "+-*/." for c in text):
-                self.app.ui.update_entry(text)
+            self.app.ui.update_entry(text)
         except Exception:
             self.app.ui.error("Invalid paste")
 

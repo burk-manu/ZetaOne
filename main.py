@@ -6,6 +6,7 @@
 import tkinter as tk
 from calculator_app import CalculatorApp
 
+# Main function to run the calculator application
 def main():
     root = tk.Tk()
     app = CalculatorApp(root)

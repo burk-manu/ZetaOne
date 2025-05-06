@@ -21,7 +21,7 @@ class Evaluator:
         user_input = self.app.current_input
 
         if user_input == "ZetaOne":
-            self.app.ui.activate_secret_functions()
+            self.app.ui.show_btn_for_advanced_options()
             return "0"
 
         # Replace constants and special characters

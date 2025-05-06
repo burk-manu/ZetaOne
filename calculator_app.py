@@ -21,14 +21,20 @@ class CalculatorApp:
         self.root.resizable(False, False)
         self.root.configure(bg="#262626")
 
-        self.current_input = "0"
-        self.buttons: dict[str, tuple[str, tk.Button]] = {}
+        self.current_input = "0" # current input variable
+        self.buttons: dict[str, tuple[str, tk.Button]] = {} # dictionary of all buttons including id, label and button object
 
+        self.history = []
+
+        # current theme
+        self.theme = "orange"
+
+        # Variables for the advanced options window
+        self.advanced_window: [tk.Toplevel] = None
         self.extra_shown = False
         self.pro_buttons = {}
 
-        self.theme = "orange"
-
+        # Initialize modules
         self.ui = CalculatorUI(self)
         self.keyboard = Keyboard(self)
         self.evaluator = Evaluator(self)

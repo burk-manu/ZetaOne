@@ -30,7 +30,7 @@ class CalculatorUI:
 
     def _init_buttons(self) -> None:
         layout = [
-            ("MC", "MR", "M+", "M-", "C"),
+            ("📋", "📥", "M-", "🔒", "C"),
             ("log", "ln", "|x|", "√", "^"),
             ("sin", "cos", "tan", "(", ")"),
             ("7", "8", "9", "/", "π"),
@@ -62,6 +62,12 @@ class CalculatorUI:
     def button_pressed(self, char: str) -> None:
         if char == "=":
             self.app.evaluator.calculate_result()
+        elif char == "📋":
+            self.app.keyboard.on_copy()
+        elif char == "📥":
+            self.app.keyboard.on_paste()
+        elif char == "M-":
+            pass
         elif char == "C":
             self.app.ui.clear_entry()
         elif char == "⌫":
@@ -112,16 +118,11 @@ class CalculatorUI:
         self.app.entry.delete(0, tk.END)
         self.app.entry.insert(tk.END, message)
 
-    def activate_secret_functions(self) -> None:
-        lock_btn = self.app.buttons.get("0705")
+    def show_btn_for_advanced_options(self) -> None:
+        lock_btn = self.app.buttons.get("0104")
         if lock_btn is not None:
             lock_button = lock_btn[1]
-            lock_button.configure(text="🔓", command=lambda: self.app.functions.easter_egg())
-            self.app.root.after(2000, lambda: lock_button.configure(
-                        text="=", 
-                        command=lambda: self.button_pressed("=")
-                    ))
-
+            lock_button.configure(text="☰", command=lambda: self.app.functions.activate_advanced_options())
     
     def change_theme(self) -> None:
         self.app.theme = "dark" if self.app.theme == "orange" else "orange"
