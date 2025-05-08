@@ -12,6 +12,12 @@ if TYPE_CHECKING:
 class CalculatorApp:
 
     def __init__(self, root):
+        """
+        Initializes the main Calculator application which includes all the modules.
+        The modules can get accessed via the self.<module> variable.
+        self is handed over to the modules to prevent circular imports.
+        Modules access each other via the self.app.<module> variable. -> app is the self instance of the CalculatorApp class.
+        """
         # type notations to prevent error in IDE
         self.root: tk.Tk
         self.entry: tk.Entry

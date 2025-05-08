@@ -10,15 +10,21 @@ if TYPE_CHECKING:
 class AdvancedOptions:
 
     def __init__(self, app: CalculatorApp, root: tk.Toplevel) -> None:
+        """
+        Initialize the AdvancedOptions class with the main app and root window.
+        """
         self.app = app
         self.root = root
-        root.title("Easter Egg")
+        root.title("Advanced Options")
         root.resizable(False, False)
         root.configure(bg="#262626")
-        self.easter_egg()
+        self.advanced_options()
     
     
-    def easter_egg(self):
+    def advanced_options(self):
+        """
+        Create the advanced options window with buttons and labels.
+        """
         pro_labels = [("🏠", "P2"), ("P3", "P4"), ("P5", "P6"), ("P7", "P8")]
         if not self.app.extra_shown:
             for i, row in enumerate(pro_labels):
@@ -34,7 +40,7 @@ class AdvancedOptions:
                         fg=self.app.ui.button_color(button_id)[1],
                         activebackground="#565656",
                         activeforeground="#C04F15",
-                        command=lambda id=button_id: self.pro_button(id)
+                        command=lambda id=button_id: self.pro_button_pressed(id)
                     )
                     button.grid(row=i+1, column=j, padx=5, pady=5, sticky="nsew")
                     self.app.buttons[button_id] = (text, button)
@@ -50,7 +56,10 @@ class AdvancedOptions:
             self.app.extra_shown = False
 
         
-    def pro_button(self, id: str) -> None:
+    def pro_button_pressed(self, id: str) -> None:
+        """
+        Define the actions for each button in the advanced options window.
+        """
         if id == "E-0101":
             self.app.ui.change_theme()
         elif id == "E-0102":

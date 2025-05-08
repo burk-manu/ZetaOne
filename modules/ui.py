@@ -1,6 +1,7 @@
 # ui.py
 from __future__ import annotations
 import tkinter as tk
+from tkinter import messagebox
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -9,13 +10,17 @@ if TYPE_CHECKING:
 
 class CalculatorUI:
     def __init__(self, app: CalculatorApp) -> None:
-        # Initialize the UI components of the calculator
+        """
+        Initializes the UI components of the calculator application.
+        """
         self.app = app
         self._init_entry()
         self._init_buttons()
 
     def _init_entry(self) -> None:
-        # Initialize and create the entry field
+        """
+        Initializes the entry field for the calculator.
+        """
         entry = tk.Entry(
             self.app.root,
             font=("Helvetica Neue", 28, "bold"),
@@ -31,9 +36,11 @@ class CalculatorUI:
             raise AttributeError("self.app.entry is not initialized properly.")
 
     def _init_buttons(self) -> None:
-        # Initialize and create the buttons for the calculator
+        """
+        Initialize and create the buttons for the calculator
+        """
         layout = [
-            ("📋", "📥", "M-", "🔒", "C"),
+            ("📋", "📥", "exp", "🔒", "C"),
             ("log", "ln", "|x|", "√", "^"),
             ("sin", "cos", "tan", "(", ")"),
             ("7", "8", "9", "/", "π"),
@@ -63,14 +70,19 @@ class CalculatorUI:
             self.app.root.columnconfigure(col, weight=1)
 
     def button_pressed(self, char: str) -> None:
+        """
+        Handles button presses and performs the corresponding action.
+        """
         if char == "=":
             self.app.evaluator.calculate_result()
         elif char == "📋":
             self.app.keyboard.on_copy()
         elif char == "📥":
             self.app.keyboard.on_paste()
+        elif char == "exp":
+            self.app.ui.update_entry("E")
         elif char == "🔒":
-            self.app.ui.error("locked")
+            self.app.ui.show_messagebox("This feature is not available yet.", "info")
         elif char == "C":
             self.app.ui.clear_entry()
         elif char == "⌫":
@@ -91,43 +103,103 @@ class CalculatorUI:
             self.app.ui.update_entry(char)
     
     def toggle_sign(self) -> None:
+        """
+        Toggles the sign of the current input in the entry field.
+        """
         try:
             self.app.ui.output(str(float(self.app.current_input)*(-1)))
         except Exception:
             self.app.ui.error("Error")
     
     def update_entry(self, text) -> None:
+        """
+        Updates the entry field with the given text.
+        """
         result = self.app.evaluator.update_entry(text)
         self.app.current_input = result if result is not None else ""
         self.app.entry.delete(0, tk.END)
         self.app.entry.insert(tk.END, self.app.current_input)
 
     def backspace(self) -> None:
+        """
+        Removes the last character from the current input in the entry field.
+        """
         self.app.current_input = self.app.current_input[:-1]
         self.app.entry.delete(0, tk.END)
         self.app.entry.insert(tk.END, self.app.current_input)
 
     def clear_entry(self) -> None:
+        """
+        Clears the entry field and resets the current input to "0".
+        """
         self.app.current_input = "0"
         self.app.entry.delete(0, tk.END)
         self.app.entry.insert(tk.END, "0")
 
     def output(self, text) -> None:
+        """
+        Displays the result in the entry field.
+        """
         self.app.entry.delete(0, tk.END)
         self.app.entry.insert(tk.END, text)
         self.app.current_input = text
 
     def error(self, message) -> None:
+        """
+        Displays an error message in the entry field.
+        Doesn't change the input in the current input variable.
+        """
         self.app.entry.delete(0, tk.END)
         self.app.entry.insert(tk.END, message)
 
     def show_btn_for_advanced_options(self) -> None:
-        lock_btn = self.app.buttons.get("0104")
-        if lock_btn is not None:
-            lock_button = lock_btn[1]
-            lock_button.configure(text="☰", command=lambda: self.app.functions.activate_advanced_options())
+        """
+        Shows a button to activate advanced options if the user agrees.
+        """
+        answer = self.app.ui.show_dialog_messagebox("Do you want to activate advanced options?", "askokcancel", "Dev Options")
+        if answer == True:
+            lock_btn = self.app.buttons.get("0104")
+            if lock_btn is not None:
+                lock_button = lock_btn[1]
+                lock_button.configure(text="☰", command=lambda: self.app.functions.activate_advanced_options())
+    
+    def show_messagebox(self, message: str, type: str = "info", title: str = "") -> None:
+        """
+        Displays a message box with the given message and type.
+        """
+        if title == "":
+            title = type
+        if type == "info":
+            messagebox.showinfo(title, message)
+        elif type == "error":
+            messagebox.showerror(title, message)
+        elif type == "warning":
+            messagebox.showwarning(title, message)            
+        else:
+            raise ValueError("Invalid message type. Use 'info', 'error', or 'warning'.")
+        
+    def show_dialog_messagebox(self, message: str, type: str = "askyesno", title: str = "") -> Union[str, bool]:
+        """
+        Displays a dialog message box with the given message and type.
+        Returns the user's response.
+        """
+        if title == "":
+            title = "Confirmation"
+        if type == "askyesno":
+            return messagebox.askyesno(title, message)
+        elif type == "askokcancel":
+            return messagebox.askokcancel(title, message)
+        elif type == "askretrycancel":
+            return messagebox.askretrycancel(title, message)
+        elif type == "askyesnocancel":
+            return messagebox.askyesnocancel(title, message)
+        else:
+            raise ValueError("Invalid message type.")
     
     def change_theme(self) -> None:
+        """
+        Toggles the theme of the calculator between dark and orange mode.
+        """
         self.app.theme = "dark" if self.app.theme == "orange" else "orange"
         mode = self.app.theme
         self.app.root.configure(bg="#000000" if mode == "dark" else "#262626")
@@ -137,6 +209,9 @@ class CalculatorUI:
             button.configure(bg=background, fg=foreground, activebackground=background, activeforeground=foreground)
         
     def button_color(self, id: str) -> tuple[str, str]:
+        """
+        Returns the background and foreground color for a button based on its ID.
+        """
         mode = self.app.theme
         if id in ("0106", "0206", "0306", "0406", "0506", "0606", "0706"):
             return ("#000000", "#FF28C2") if mode == "dark" else ("#565656", "#C04F15")
