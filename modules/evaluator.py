@@ -108,9 +108,9 @@ class Evaluator:
         """
         try:
             if operation == "log":
-                return float(log(sympify(user_input), 10).evalf())  # Base-10 logarithm
+                return float(log(sympify(user_input), 10).evalf())  # type: ignore # Base-10 logarithm
             elif operation == "ln":
-                return float(log(sympify(user_input)).evalf())  # Natural logarithm
+                return float(log(sympify(user_input)).evalf())  # type: ignore # Natural logarithm
         except ValueError:
             self.app.ui.error("Error")
         raise ValueError("Invalid operation or input for logarithm calculation")
