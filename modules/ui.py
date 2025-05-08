@@ -2,7 +2,7 @@
 from __future__ import annotations
 import tkinter as tk
 from tkinter import messagebox
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 if TYPE_CHECKING:
     from calculator_app import CalculatorApp
@@ -178,7 +178,7 @@ class CalculatorUI:
         else:
             raise ValueError("Invalid message type. Use 'info', 'error', or 'warning'.")
         
-    def show_dialog_messagebox(self, message: str, type: str = "askyesno", title: str = "") -> Union[str, bool]:
+    def show_dialog_messagebox(self, message: str, type: str = "askyesno", title: str = "") -> Union[str, bool, None]:
         """
         Displays a dialog message box with the given message and type.
         Returns the user's response.

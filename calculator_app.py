@@ -4,7 +4,7 @@ from modules.ui import CalculatorUI
 from modules.keyboard import Keyboard
 from modules.evaluator import Evaluator
 from modules.functions import Functions
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from calculator_app import CalculatorApp
@@ -36,7 +36,7 @@ class CalculatorApp:
         self.theme = "orange"
 
         # Variables for the advanced options window
-        self.advanced_window: tk.Toplevel = None
+        self.advanced_window: Optional[tk.Toplevel] = None
         self.extra_shown = False
         self.pro_buttons = {}
 
