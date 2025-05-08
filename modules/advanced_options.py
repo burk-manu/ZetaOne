@@ -1,4 +1,4 @@
-# easter_egg.py
+# adcanced_options.py
 from __future__ import annotations
 import tkinter as tk
 from typing import TYPE_CHECKING
