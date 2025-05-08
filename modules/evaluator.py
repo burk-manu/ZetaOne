@@ -3,6 +3,7 @@ from __future__ import annotations
 from sympy import sympify, pi, E, log, Abs, rad
 import re
 from sympy.functions import sin, cos, tan
+import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -12,6 +13,8 @@ if TYPE_CHECKING:
 class Evaluator:
     def __init__(self, app: CalculatorApp) -> None:
         self.app = app
+
+        self.logger = logging.getLogger(__name__)
 
     def prepare_input_for_calculation(self) -> str:
         """
@@ -133,9 +136,10 @@ class Evaluator:
         try:
             result = sympify(user_input).evalf()
             return self.round_result(result)
-        except Exception:
+        except Exception as e:
             self.app.ui.error("Error")
-            raise
+            self.logger.error("Evaluation error: %s", e)
+            raise ValueError("Invalid input for evaluation")
 
     def round_result(self, result: float) -> str:
         """

@@ -5,9 +5,23 @@
 #main.py
 import tkinter as tk
 from calculator_app import CalculatorApp
+import logging
+
+def setup_logging():
+    """
+    Set up logging configuration.
+    """
+    logging.basicConfig(
+        level=logging.INFO,  # Standard level; can later be reduced to DEBUG
+        format="%(asctime)s %(levelname)-8s [%(name)s] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
 
 # Main function to run the calculator application
 def main():
+    setup_logging()
+    logger = logging.getLogger(__name__)
+    logger.info("Start calculator application")
     root = tk.Tk()
     app = CalculatorApp(root)
     root.mainloop()

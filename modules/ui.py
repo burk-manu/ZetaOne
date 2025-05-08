@@ -2,6 +2,7 @@
 from __future__ import annotations
 import tkinter as tk
 from tkinter import messagebox
+import logging
 from typing import TYPE_CHECKING, Union
 
 if TYPE_CHECKING:
@@ -16,6 +17,8 @@ class CalculatorUI:
         self.app = app
         self._init_entry()
         self._init_buttons()
+
+        self.logger = logging.getLogger(__name__)
 
     def _init_entry(self) -> None:
         """

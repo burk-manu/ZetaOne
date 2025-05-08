@@ -1,5 +1,6 @@
 # keyboard.py
 from __future__ import annotations
+import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -14,6 +15,9 @@ class Keyboard:
         self.app = app
         self.root = app.root
         self._init_keyboard()
+
+        self.logger = logging.getLogger(__name__)
+        
         
     def _init_keyboard(self) -> None:
         """

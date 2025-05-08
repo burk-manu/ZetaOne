@@ -1,5 +1,6 @@
 # calculator_app.py
 import tkinter as tk
+import logging
 from modules.ui import CalculatorUI
 from modules.keyboard import Keyboard
 from modules.evaluator import Evaluator
@@ -11,7 +12,7 @@ if TYPE_CHECKING:
 
 class CalculatorApp:
 
-    def __init__(self, root):
+    def __init__(self, root) -> None:
         """
         Initializes the main Calculator application which includes all the modules.
         The modules can get accessed via the self.<module> variable.
@@ -26,6 +27,8 @@ class CalculatorApp:
         self.root.title("ZetaOne")
         self.root.resizable(False, False)
         self.root.configure(bg="#262626")
+
+        self.logger = logging.getLogger(__name__)
 
         self.current_input = "0" # current input variable
         self.buttons: dict[str, tuple[str, tk.Button]] = {} # dictionary of all buttons including id, label and button object

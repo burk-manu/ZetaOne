@@ -1,6 +1,7 @@
 # functions.py
 from __future__ import annotations
 import tkinter as tk
+import logging
 from typing import TYPE_CHECKING
 from modules.advanced_options import AdvancedOptions
 
@@ -11,6 +12,8 @@ class Functions:
 
     def __init__(self, app:CalculatorApp) -> None:
         self.app = app
+
+        logger = logging.getLogger(__name__)
     
     def activate_advanced_options(self) -> None:
         """

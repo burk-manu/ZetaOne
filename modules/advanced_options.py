@@ -1,6 +1,7 @@
 # adcanced_options.py
 from __future__ import annotations
 import tkinter as tk
+import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -19,6 +20,8 @@ class AdvancedOptions:
         root.resizable(False, False)
         root.configure(bg="#262626")
         self.advanced_options()
+
+        self.logger = logging.getLogger(__name__)
     
     
     def advanced_options(self):
