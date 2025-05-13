@@ -2,6 +2,7 @@
 from __future__ import annotations
 import tkinter as tk
 import logging
+from config.colors import BG_BLACK, BG_DARKGREY, BG_LIGHTGREY, FG_ORANGE, FG_WHITE, FG_BLUE, FG_GREEN, FG_RED, FG_PINK
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -18,7 +19,7 @@ class AdvancedOptions:
         self.root = root
         root.title("Advanced Options")
         root.resizable(False, False)
-        root.configure(bg="#262626")
+        root.configure(bg=BG_DARKGREY)
         self.advanced_options()
 
         self.logger = logging.getLogger(__name__)
@@ -41,8 +42,8 @@ class AdvancedOptions:
                         font=("Helvetica Neue", 24),
                         bg=self.app.ui.button_color(button_id)[0],
                         fg=self.app.ui.button_color(button_id)[1],
-                        activebackground="#565656",
-                        activeforeground="#C04F15",
+                        activebackground=BG_LIGHTGREY,
+                        activeforeground=FG_ORANGE,
                         command=lambda id=button_id: self.pro_button_pressed(id)
                     )
                     button.grid(row=i+1, column=j, padx=5, pady=5, sticky="nsew")

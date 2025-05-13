@@ -3,6 +3,7 @@ from __future__ import annotations
 import tkinter as tk
 from tkinter import messagebox
 import logging
+from config.colors import BG_BLACK, BG_DARKGREY, BG_LIGHTGREY, FG_ORANGE, FG_WHITE, FG_BLUE, FG_GREEN, FG_RED, FG_PINK
 from typing import TYPE_CHECKING, Union
 
 if TYPE_CHECKING:
@@ -31,7 +32,7 @@ class CalculatorUI:
             relief="solid",
             justify="right"
         )
-        entry.configure(bg="#262626", fg="#C04F15")
+        entry.configure(bg=BG_DARKGREY, fg=FG_ORANGE)
         entry.grid(row=0, column=0, columnspan=6, sticky="ew", padx=5, pady=5)
         entry.insert(tk.END, "0")
         self.app.entry = entry
@@ -59,10 +60,10 @@ class CalculatorUI:
                     width=3,
                     height=1,
                     font=("Helvetica Neue", 24),
-                    bg="#262626",
-                    fg="#C04F15",
-                    activebackground="#262626",
-                    activeforeground="#C04F15",
+                    bg=BG_DARKGREY,
+                    fg=FG_ORANGE,
+                    activebackground=BG_DARKGREY,
+                    activeforeground=FG_ORANGE,
                     command=lambda t=text: self.button_pressed(t)
                 )
                 button.grid(row=i+1, column=j, padx=5, pady=5, sticky="nsew")
@@ -205,8 +206,8 @@ class CalculatorUI:
         """
         self.app.theme = "dark" if self.app.theme == "orange" else "orange"
         mode = self.app.theme
-        self.app.root.configure(bg="#000000" if mode == "dark" else "#262626")
-        self.app.entry.configure(bg="#000000" if mode == "dark" else "#262626", fg="#FF28C2" if mode == "dark" else "#C04F15")
+        self.app.root.configure(bg=BG_BLACK if mode == "dark" else BG_DARKGREY)
+        self.app.entry.configure(bg=BG_BLACK if mode == "dark" else BG_DARKGREY, fg=FG_PINK if mode == "dark" else FG_ORANGE)
         for id, (_, button) in self.app.buttons.items():
             background, foreground = self.button_color(id)
             button.configure(bg=background, fg=foreground, activebackground=background, activeforeground=foreground)
@@ -216,14 +217,15 @@ class CalculatorUI:
         Returns the background and foreground color for a button based on its ID.
         """
         mode = self.app.theme
-        if id in ("0106", "0206", "0306", "0406", "0506", "0606", "0706"):
-            return ("#000000", "#FF28C2") if mode == "dark" else ("#565656", "#C04F15")
+        if id in ("E-0101", "E-0102", "E-0201", "E-0202", "E-0301", "E-0302", "E-0401", "E-0402"): # Buttons for Advanced Features
+            print("ID:", id)
+            return (BG_BLACK, FG_PINK) if mode == "dark" else (BG_LIGHTGREY, FG_ORANGE)
         elif id in ("0701", "0702", "0703", "0601", "0602", "0603", "0501", "0502", "0503", "0401", "0402", "0403"): #("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "±")
-            return ("#000000", "#4C58FF") if mode == "dark" else ("#262626", "#C04F15")
+            return (BG_BLACK, FG_BLUE) if mode == "dark" else (BG_DARKGREY, FG_ORANGE)
         elif id in ("0101", "0102", "0103", "0104", "0105", "0106", "0201", "0202", "0203", "0204", "0205", "0206", "0301", "0302", "0303", "0304", "0305", "0306", "0404", "0405", "0406", "0504", "0505", "0506", "0604", "0605", "0606", "0704"): #("MC", "MR", "M+", "M-", "C", "log", "ln", "|x|", "√", "^", "sin", "cos", "tan", "(", ")", "/", "*", "-", "+", "⌫", "π", "e")
-            return ("#000000", "#02FFA6") if mode == "dark" else ("#262626", "#C04F15")
+            return (BG_BLACK, FG_GREEN) if mode == "dark" else (BG_DARKGREY, FG_ORANGE)
         elif id in ("0705"): #("=")
-            return ("#000000", "#FF005D") if mode == "dark" else ("#262626", "#C04F15")
+            return (BG_BLACK, FG_RED) if mode == "dark" else (BG_DARKGREY, FG_ORANGE)
 
-        else: # fallback to default color
-            return ("#000000", "#FFFFFF") if mode == "dark" else ("#262626", "#C04F15")
+        else: # fallback colors
+            return (BG_BLACK, FG_WHITE) if mode == "dark" else (BG_DARKGREY, FG_ORANGE)
