@@ -1,6 +1,7 @@
 # Author: Manuel Bürki
-# Date: 2025-04-20
+# Date: 2025-05-13
 # License: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+# Repository: https://github.com/XenovaStudios/ZetaOne
 
 #main.py
 import tkinter as tk
