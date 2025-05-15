@@ -56,13 +56,13 @@ class Evaluator:
             func = match.group(1)
             try:
                 value = float(match.group(2))
-                degrees = rad(value)  # Convert radians to degrees
+                degrees = rad(value)  # Convert degrees to radians
                 return f"{func}({degrees})"
             except ValueError:
                 self.app.ui.error("Error")
                 return match.group(0)
 
-        trig_pattern = r'\b(sin|cos|tan)\(\s*([+-]?\d*\.?\d+)\s*\)'
+        trig_pattern = r'\b(sin|cos|tan)\(\s*([+-]?\d*\.?\d+)\s*\)' # Matches sin(x), cos(x), tan(x)
         return re.sub(trig_pattern, replace_trig, user_input)
 
     def update_entry(self, text: str) -> str:
@@ -114,9 +114,15 @@ class Evaluator:
                 return float(log(sympify(user_input), 10).evalf())  # type: ignore # Base-10 logarithm
             elif operation == "ln":
                 return float(log(sympify(user_input)).evalf())  # type: ignore # Natural logarithm
-        except ValueError:
+            else:
+                self.app.ui.error("Error")
+                self.logger.debug("Unsupported logarithm operation: %s", operation)
+                raise ValueError(f"Unsupported logarithm operation: {operation}")
+        except ValueError as e:
             self.app.ui.error("Error")
-        raise ValueError("Invalid operation or input for logarithm calculation")
+            self.logger.debug("Logarithm calculation error: %s", e)
+            raise ValueError("Invalid input for logarithm calculation")
+        
 
     def calculate_result(self) -> None:
         """
@@ -128,6 +134,7 @@ class Evaluator:
             self.app.ui.output(result)
         except Exception as e:
             self.app.ui.error("Error")
+            self.logger.error("Calculation error: %s", e)
 
     def evaluate(self, user_input: str) -> str:
         """
@@ -135,6 +142,7 @@ class Evaluator:
         """
         try:
             result = sympify(user_input).evalf()
+            self.logger.debug("Evaluated result: %s", result)
             return self.round_result(result)
         except Exception as e:
             self.app.ui.error("Error")
@@ -146,5 +154,7 @@ class Evaluator:
         Rounds the result to an integer if it's very close to an integer.
         """
         if abs(result - round(result)) < 1e-9:
+            self.logger.debug("Rounding result to integer: %s", result)
             return str(int(round(result)))
+        self.logger.debug("Result was not rounded: %s", result)
         return str(result)

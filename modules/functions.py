@@ -13,7 +13,7 @@ class Functions:
     def __init__(self, app:CalculatorApp) -> None:
         self.app = app
 
-        logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__)
     
     def activate_advanced_options(self) -> None:
         """
@@ -28,11 +28,14 @@ class Functions:
             self.app.advanced_window.configure(bg="#262626")
             self.app.advanced_window.protocol("WM_DELETE_WINDOW", self.close_advanced_options)
             AdvancedOptions(self.app, self.app.advanced_window)
+            self.app.extra_shown = True
+            self.logger.debug("Advanced options window created.")
         else:
             # Redisplay the window if minimized or hidden
             self.app.advanced_window.deiconify()
             self.app.advanced_window.lift()       
             self.app.advanced_window.focus_force()
+            self.logger.debug("Advanced options window brought to front.")
 
 
     def close_advanced_options(self) -> None:
@@ -42,3 +45,4 @@ class Functions:
         if self.app.advanced_window is not None:
             self.app.advanced_window.destroy()
             self.app.advanced_window = None
+            self.logger.debug("Advanced options window closed.")

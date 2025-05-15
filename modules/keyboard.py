@@ -14,9 +14,12 @@ class Keyboard:
         """
         self.app = app
         self.root = app.root
+        
+        self.logger = logging.getLogger(__name__)
+
         self._init_keyboard()
 
-        self.logger = logging.getLogger(__name__)
+
         
         
     def _init_keyboard(self) -> None:
@@ -26,6 +29,7 @@ class Keyboard:
         self.root.bind("<Key>", self.on_key_press)
         self.root.bind("<Control-v>", self.on_paste)
         self.root.bind("<Control-c>", self.on_copy)
+        self.logger.debug("Keyboard bindings initialized.")
 
     def on_key_press(self, event) -> None:
         """
@@ -33,6 +37,7 @@ class Keyboard:
         Handles Enter, Backspace, and other character inputs.
         """
         char = event.char
+        self.logger.debug(f"Key pressed: {char}")
         if char == "\r":
             self.app.evaluator.calculate_result()
         elif char == "\b":
@@ -49,6 +54,7 @@ class Keyboard:
             self.app.ui.update_entry(text)
         except Exception:
             self.app.ui.error("Invalid paste")
+        self.logger.debug("Clipboard content pasted into entry field.")
 
     def on_copy(self, event=None) -> None:
         """
@@ -59,3 +65,4 @@ class Keyboard:
             self.root.clipboard_append(self.app.current_input)
         except Exception:
             self.app.ui.error("Invalid copy")
+        self.logger.debug("Clipboard updated with current input.")
