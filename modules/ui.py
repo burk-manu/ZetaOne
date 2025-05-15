@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import messagebox
 import logging
 from config.colors import BG_BLACK, BG_DARKGREY, BG_LIGHTGREY, FG_ORANGE, FG_WHITE, FG_BLUE, FG_GREEN, FG_RED, FG_PINK
+from config.layout import BTN_PAD_X, BTN_PAD_Y, ENT_BORDER_WIDTH, ENT_FONT, ENT_PAD_X, ENT_PAD_Y, ENT_BG, ENT_FG
 from typing import TYPE_CHECKING, Union
 
 if TYPE_CHECKING:
@@ -26,13 +27,13 @@ class CalculatorUI:
     def _init_entry(self) -> None:
         entry = tk.Entry(
             self.app.root,
-            font=("Helvetica Neue", 28, "bold"),
-            borderwidth=1,
+            font=ENT_FONT,
+            borderwidth=ENT_BORDER_WIDTH,
             relief="solid",
             justify="right"
         )
-        entry.configure(bg=BG_DARKGREY, fg=FG_ORANGE)
-        entry.grid(row=0, column=0, columnspan=6, sticky="ew", padx=5, pady=5)
+        entry.configure(bg=ENT_BG, fg=ENT_FG)
+        entry.grid(row=0, column=0, columnspan=6, sticky="ew", padx=ENT_PAD_X, pady=ENT_PAD_Y)
         entry.insert(tk.END, "0")
         self.app.entry = entry
         if not hasattr(self.app, 'entry') or self.app.entry is None:
@@ -69,7 +70,7 @@ class CalculatorUI:
                     activeforeground=FG_ORANGE,
                     command=lambda t=text: self.button_pressed(t)
                 )
-                button.grid(row=i+1, column=j, padx=5, pady=5, sticky="nsew")
+                button.grid(row=i+1, column=j, padx=BTN_PAD_X, pady=BTN_PAD_Y, sticky="nsew")
                 button_id = (f"0{i+1}" if i+1 < 10 else f"{i+1}") + (f"0{j+1}" if j+1 < 10 else f"{j+1}")
                 self.app.buttons[button_id] = (text, button)
                 self.logger.debug(f"Button {text} initialized with ID {button_id}.")

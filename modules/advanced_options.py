@@ -3,6 +3,7 @@ from __future__ import annotations
 import tkinter as tk
 import logging
 from config.colors import BG_BLACK, BG_DARKGREY, BG_LIGHTGREY, FG_ORANGE, FG_WHITE, FG_BLUE, FG_GREEN, FG_RED, FG_PINK
+from config.layout import PRO_BTN_PAD_X, PRO_BTN_PAD_Y
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -48,10 +49,9 @@ class AdvancedOptions:
                     bg=self.app.ui.button_color(button_id)[0],
                     fg=self.app.ui.button_color(button_id)[1],
                     activebackground=BG_LIGHTGREY,
-                    activeforeground=FG_ORANGE,
                     command=lambda id=button_id: self.pro_button_pressed(id)
                 )
-                button.grid(row=i+1, column=j, padx=5, pady=5, sticky="nsew")
+                button.grid(row=i+1, column=j, padx=PRO_BTN_PAD_X, pady=PRO_BTN_PAD_Y, sticky="nsew")
                 self.app.buttons[button_id] = (text, button)
                 self.logger.debug(f"Button {button_id} created with text: {text}")
 
