@@ -16,15 +16,14 @@ class CalculatorUI:
         Initializes the UI components of the calculator application.
         """
         self.app = app
+        self.logger = logging.getLogger(__name__)
+
         self._init_entry()
         self._init_buttons()
 
-        self.logger = logging.getLogger(__name__)
+        self.logger.debug("Calculator UI initialized.")
 
     def _init_entry(self) -> None:
-        """
-        Initializes the entry field for the calculator.
-        """
         entry = tk.Entry(
             self.app.root,
             font=("Helvetica Neue", 28, "bold"),
@@ -38,10 +37,14 @@ class CalculatorUI:
         self.app.entry = entry
         if not hasattr(self.app, 'entry') or self.app.entry is None:
             raise AttributeError("self.app.entry is not initialized properly.")
+        
+        self.logger.debug("Entry field initialized.")
 
     def _init_buttons(self) -> None:
         """
-        Initialize and create the buttons for the calculator
+        Initializes the calculator buttons and their layout.
+        Creates buttons for numbers, operations, and special functions.
+        Each button is assigned a command to handle its action when pressed.
         """
         layout = [
             ("📋", "📥", "exp", "🔒", "C"),
@@ -69,9 +72,12 @@ class CalculatorUI:
                 button.grid(row=i+1, column=j, padx=5, pady=5, sticky="nsew")
                 button_id = (f"0{i+1}" if i+1 < 10 else f"{i+1}") + (f"0{j+1}" if j+1 < 10 else f"{j+1}")
                 self.app.buttons[button_id] = (text, button)
+                self.logger.debug(f"Button {text} initialized with ID {button_id}.")
 
         for col in range(6):
             self.app.root.columnconfigure(col, weight=1)
+        
+        self.logger.debug("Buttons successfully initialized and added to the grid.")
 
     def button_pressed(self, char: str) -> None:
         """
@@ -107,38 +113,31 @@ class CalculatorUI:
             self.app.ui.update_entry(char)
     
     def toggle_sign(self) -> None:
-        """
-        Toggles the sign of the current input in the entry field.
-        """
         try:
             self.app.ui.output(str(float(self.app.current_input)*(-1)))
+            self.logger.debug(f"Sign toggled: {self.app.current_input} -> {str(float(self.app.current_input)*(-1))}")
         except Exception:
             self.app.ui.error("Error")
     
     def update_entry(self, text) -> None:
-        """
-        Updates the entry field with the given text.
-        """
         result = self.app.evaluator.update_entry(text)
+        self.logger.debug(f"Update entry (text: {self.app.current_input}) with '{text}'")
         self.app.current_input = result if result is not None else ""
         self.app.entry.delete(0, tk.END)
         self.app.entry.insert(tk.END, self.app.current_input)
+        self.logger.debug(f"updated entry: {self.app.current_input}")
 
     def backspace(self) -> None:
-        """
-        Removes the last character from the current input in the entry field.
-        """
         self.app.current_input = self.app.current_input[:-1]
         self.app.entry.delete(0, tk.END)
         self.app.entry.insert(tk.END, self.app.current_input)
+        self.logger.debug(f"Backspace pressed. Current input: {self.app.current_input}")
 
     def clear_entry(self) -> None:
-        """
-        Clears the entry field and resets the current input to "0".
-        """
         self.app.current_input = "0"
         self.app.entry.delete(0, tk.END)
         self.app.entry.insert(tk.END, "0")
+        self.logger.debug("Entry cleared.")
 
     def output(self, text) -> None:
         """
@@ -147,6 +146,7 @@ class CalculatorUI:
         self.app.entry.delete(0, tk.END)
         self.app.entry.insert(tk.END, text)
         self.app.current_input = text
+        self.logger.debug(f"Output displayed: {text}")
 
     def error(self, message) -> None:
         """
@@ -155,6 +155,7 @@ class CalculatorUI:
         """
         self.app.entry.delete(0, tk.END)
         self.app.entry.insert(tk.END, message)
+        self.logger.error(f"(Error displayed: {message})")
 
     def show_btn_for_advanced_options(self) -> None:
         """
@@ -166,6 +167,7 @@ class CalculatorUI:
             if lock_btn is not None:
                 lock_button = lock_btn[1]
                 lock_button.configure(text="☰", command=lambda: self.app.functions.activate_advanced_options())
+                self.logger.debug("Advanced options activated.")
     
     def show_messagebox(self, message: str, type: str = "info", title: str = "") -> None:
         """
@@ -181,6 +183,7 @@ class CalculatorUI:
             messagebox.showwarning(title, message)            
         else:
             raise ValueError("Invalid message type. Use 'info', 'error', or 'warning'.")
+        self.logger.debug(f"Messagebox displayed: {message} (type: {type})")
         
     def show_dialog_messagebox(self, message: str, type: str = "askyesno", title: str = "") -> Union[str, bool, None]:
         """
@@ -199,6 +202,7 @@ class CalculatorUI:
             return messagebox.askyesnocancel(title, message)
         else:
             raise ValueError("Invalid message type.")
+        self.logger.debug(f"Dialog messagebox displayed: {message} (type: {type})")
     
     def change_theme(self) -> None:
         """
@@ -211,6 +215,7 @@ class CalculatorUI:
         for id, (_, button) in self.app.buttons.items():
             background, foreground = self.button_color(id)
             button.configure(bg=background, fg=foreground, activebackground=background, activeforeground=foreground)
+        self.logger.debug(f"Theme changed to {mode} mode.")
         
     def button_color(self, id: str) -> tuple[str, str]:
         """
@@ -218,7 +223,6 @@ class CalculatorUI:
         """
         mode = self.app.theme
         if id in ("E-0101", "E-0102", "E-0201", "E-0202", "E-0301", "E-0302", "E-0401", "E-0402"): # Buttons for Advanced Features
-            print("ID:", id)
             return (BG_BLACK, FG_PINK) if mode == "dark" else (BG_LIGHTGREY, FG_ORANGE)
         elif id in ("0701", "0702", "0703", "0601", "0602", "0603", "0501", "0502", "0503", "0401", "0402", "0403"): #("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "±")
             return (BG_BLACK, FG_BLUE) if mode == "dark" else (BG_DARKGREY, FG_ORANGE)
