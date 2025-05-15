@@ -13,7 +13,7 @@ def setup_logging():
     Set up logging configuration.
     """
     logging.basicConfig(
-        level=logging.INFO,  # Standard level; can later be reduced to DEBUG
+        level=logging.DEBUG,  # Standard level; can later be reduced to DEBUG
         format="%(asctime)s %(levelname)-8s [%(name)s] %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S"
     )
