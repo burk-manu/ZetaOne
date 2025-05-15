@@ -1,5 +1,6 @@
 # colors.py
 
+# Standard Colors
 # Background Colors
 BG_BLACK = "#000000"
 BG_DARKGREY = "#1F1F1F"
