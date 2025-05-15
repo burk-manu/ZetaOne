@@ -1,6 +1,0 @@
-# librarys
-mpmath==1.3.0
-python-vlc==3.0.21203
-sympy==1.13.3
-
-Status 2025-05-13 (Version 1.2.0)
