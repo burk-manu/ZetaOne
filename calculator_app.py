@@ -48,3 +48,4 @@ class CalculatorApp:
         self.keyboard = Keyboard(self)
         self.evaluator = Evaluator(self)
         self.functions = Functions(self)
+        self.logger.debug("CalculatorApp initialized with all modules.")

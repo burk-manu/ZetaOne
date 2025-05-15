@@ -19,7 +19,7 @@ class AdvancedOptions:
         self.root = root
         root.title("Advanced Options")
         root.resizable(False, False)
-        root.configure(bg=BG_DARKGREY)
+        root.configure(bg=BG_BLACK)
 
         self.logger = logging.getLogger(__name__)
 
@@ -30,7 +30,12 @@ class AdvancedOptions:
         """
         Create the advanced options window with buttons and labels.
         """
-        pro_labels = [("🏠", "P2"), ("P3", "P4"), ("P5", "P6"), ("P7", "P8")]
+        pro_labels = [
+            ("🏠", "P2", "P3"),
+            ("P4", "P5", "P6"),
+            ("P7", "P8", "P9")
+        ]
+        # pro_labels = [("🏠", "P2"), ("P3", "P4"), ("P5", "P6"), ("P7", "P8")]
         for i, row in enumerate(pro_labels):
             for j, text in enumerate(row):
                 button_id = f"E-0{i+1}0{j+1}"
@@ -57,19 +62,22 @@ class AdvancedOptions:
         """
         Define the actions for each button in the advanced options window.
         """
+        self.logger.debug(f"Button pressed: {id}")
         if id == "E-0101":
             self.app.ui.change_theme()
         elif id == "E-0102":
             self.app.ui.output("P2 pressed")
-        elif id == "E-0201":
+        elif id == "E-0103":
             self.app.ui.output("P3 pressed")
-        elif id == "E-0202":
+        elif id == "E-0201":
             self.app.ui.output("P4 pressed")
-        elif id == "E-0301":
+        elif id == "E-0202":
             self.app.ui.output("P5 pressed")
-        elif id == "E-0302":
+        elif id == "E-0203":
             self.app.ui.output("P6 pressed")
-        elif id == "E-0401":
+        elif id == "E-0301":
             self.app.ui.output("P7 pressed")
-        elif id == "E-0402":
+        elif id == "E-0302":
             self.app.ui.output("P8 pressed")
+        elif id == "E-0303":
+            self.app.ui.output("P9 pressed")

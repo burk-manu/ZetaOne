@@ -222,8 +222,8 @@ class CalculatorUI:
         Returns the background and foreground color for a button based on its ID.
         """
         mode = self.app.theme
-        if id in ("E-0101", "E-0102", "E-0201", "E-0202", "E-0301", "E-0302", "E-0401", "E-0402"): # Buttons for Advanced Features
-            return (BG_BLACK, FG_PINK) if mode == "dark" else (BG_LIGHTGREY, FG_ORANGE)
+        if id in ("E-0101", "E-0102", "E-0103", "E-0201", "E-0202", "E-0203", "E-0301", "E-0302", "E-0303"): # Buttons for Advanced Features
+            return (BG_BLACK, FG_PINK) if mode == "dark" else (BG_BLACK, FG_WHITE)
         elif id in ("0701", "0702", "0703", "0601", "0602", "0603", "0501", "0502", "0503", "0401", "0402", "0403"): #("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "±")
             return (BG_BLACK, FG_BLUE) if mode == "dark" else (BG_DARKGREY, FG_ORANGE)
         elif id in ("0101", "0102", "0103", "0104", "0105", "0106", "0201", "0202", "0203", "0204", "0205", "0206", "0301", "0302", "0303", "0304", "0305", "0306", "0404", "0405", "0406", "0504", "0505", "0506", "0604", "0605", "0606", "0704"): #("MC", "MR", "M+", "M-", "C", "log", "ln", "|x|", "√", "^", "sin", "cos", "tan", "(", ")", "/", "*", "-", "+", "⌫", "π", "e")

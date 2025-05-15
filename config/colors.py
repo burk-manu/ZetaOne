@@ -2,8 +2,8 @@
 
 # Background Colors
 BG_BLACK = "#000000"
-BG_DARKGREY = "#262626"
-BG_LIGHTGREY = "#565656"
+BG_DARKGREY = "#1F1F1F"
+BG_LIGHTGREY = "#282828"
 
 # Foreground Colors
 FG_ORANGE = "#C04F15"
