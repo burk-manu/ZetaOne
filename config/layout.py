@@ -1,5 +1,5 @@
 # Layout parameters for the application
-from colors import *
+from config.colors import *
 # Button padding
 BTN_PAD_X = 5
 BTN_PAD_Y = 5

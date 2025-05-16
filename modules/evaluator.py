@@ -134,7 +134,7 @@ class Evaluator:
             self.app.ui.output(result)
         except Exception as e:
             self.app.ui.error("Error")
-            self.logger.error("Calculation error: %s", e)
+            self.logger.exception("Calculation error: %s", e)
 
     def evaluate(self, user_input: str) -> str:
         """
@@ -146,7 +146,7 @@ class Evaluator:
             return self.round_result(result)
         except Exception as e:
             self.app.ui.error("Error")
-            self.logger.error("Evaluation error: %s", e)
+            self.logger.exception("Evaluation error: %s", e)
             raise ValueError("Invalid input for evaluation")
 
     def round_result(self, result: float) -> str:

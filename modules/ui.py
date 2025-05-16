@@ -156,7 +156,7 @@ class CalculatorUI:
         """
         self.app.entry.delete(0, tk.END)
         self.app.entry.insert(tk.END, message)
-        self.logger.error(f"(Error displayed: {message})")
+        self.logger.exception(f"(Error displayed: {message})")
 
     def show_btn_for_advanced_options(self) -> None:
         """

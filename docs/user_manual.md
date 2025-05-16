@@ -117,7 +117,7 @@ Once these steps complete without error, ZetaOne is ready for use. Enjoy fast, a
 
 
 ## Tips & Notes
-- **Unlock Advanced Features**: Click the Lock/Menu icon to access additional tools, such as statistical functions or equation solvers.  
+- **Unlock Advanced Features**: Enter the secret code and press Enter. Confirm the activation in the message box. The lock button icon should then change from '🔒' to '☰'. Pressing this button will open an additional panel with some advanced features. Feel free to try them out.
 - **Clipboard Integration**: Use Copy and Paste to transfer values seamlessly between ZetaOne and other applications.  
 - **Error Correction**: Use ⌫ to remove only the last character, avoiding the need to re-enter entire expressions.  
 - **Sign Toggle**: Use ± to switch between positive and negative values quickly.

@@ -25,7 +25,7 @@ class Functions:
             self.app.advanced_window = tk.Toplevel(self.app.root)
             self.app.advanced_window.title("Advanced Options")
             self.app.advanced_window.resizable(False, False)
-            self.app.advanced_window.configure(bg="#262626")
+            self.app.advanced_window.configure(bg="#2B2929")
             self.app.advanced_window.protocol("WM_DELETE_WINDOW", self.close_advanced_options)
             AdvancedOptions(self.app, self.app.advanced_window)
             self.app.extra_shown = True
