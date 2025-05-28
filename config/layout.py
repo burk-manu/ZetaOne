@@ -1,3 +1,4 @@
+# layout.py
 # Layout parameters for the application
 from config.colors import *
 # Button padding
